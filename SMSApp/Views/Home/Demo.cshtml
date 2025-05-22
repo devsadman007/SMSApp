@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewData["Title"] = "Demo";
+}
+
+<h1>Demo</h1>
+@section Scripts{
+    <script>
+            $(document).ready(function () {
+                  $.get("/api/departments", function (result) {
+                // Handle the response data here
+                  console.log(result);
+            });
+        });
+    </script>
+}
+
+
+
