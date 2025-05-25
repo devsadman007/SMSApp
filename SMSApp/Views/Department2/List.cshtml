@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>List</h1>
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-primary" href="/Department2/Form"><i class="fa-solid fa-square-plus"></i> Create New</a>
+    </div>
+    <div class="col-md-12">
+        <table id="listTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Short Name</th>
+                    <th>Code</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@section Styles {
+    <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/lib/datatable/js/datatable.min.js"></script>
+    <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#listTable').DataTable({
+                ajax : {
+                    url: '/api/Departments',
+                    dataSrc: ""
+                },
+                columns: [
+                    {data: 'name'},
+                    {data: 'short_name'},
+                    {data: 'code'},
+                    {
+                        data: 'id',
+                        render: function(data){
+                            return "<div class='btn-group'> "+
+                                "<a href='/Department2/Form?id="+data+"' class='btn btn-info js-edit' data-id="+data+"><i class='fa-solid fa-pen-to-square'></i></a>"+
+                                "<a class='btn btn-danger js-delete' data-id="+data+"><i class='fa-solid fa-trash-can'></i></a>"+
+                                "</div>";
+                        }
+                    }
+                ]
+            });
+
+            // Delete button handler
+            $(document.body).on("click", ".js-delete", function(e){
+                var button = $(this);
+                var id = button.attr("data-id");
+                bootbox.confirm("Are you sure to delete the data?", function(result){
+                    if(result){
+                        $.ajax({
+                            url: "/api/Departments/" + id,
+                            method: "DELETE",
+                            success: function(){
+                                toastr.success("Data delete successful");
+
+                                // Remove row from DataTable
+                                var table = $("#listTable").DataTable();
+                                table.row(button.parents("tr")).remove().draw(false);
+                            },
+                            error: function(request){
+                                var response = jQuery.parseJSON(request.responseText);
+                                toastr.error(response.message || "An error occurred", "Error");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

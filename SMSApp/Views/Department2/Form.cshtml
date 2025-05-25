@@ -1,0 +1,122 @@
+﻿@model SMSApp.Models.Department
+@{
+    ViewData["Title"] = "Form";
+}
+
+<h1>Form</h1>
+<form>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Short_name" class="control-label"></label>
+                <input asp-for="Short_name" class="form-control" />
+                <span asp-validation-for="Short_name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Code" class="control-label"></label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="createdAt" class="control-label"></label>
+                <input asp-for="createdAt" class="form-control" />
+                <span asp-validation-for="createdAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" id="btnSubmit" value="Submit" class="btn btn-primary" />
+                @* <a class="btn btn-danger" asp-action="Index">Back to List</a> *@
+                <a class="btn btn-danger" href="/Department2/List">Back to List</a>
+                
+                <input asp-for="Id" type="hidden" />
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function(){
+            var urlVar=getUrlVars();
+            var id=urlVar["id"];
+            if(id>0){
+                getData(id);
+            }
+        });
+
+
+        $(document.body).on("click", "#btnSubmit", function(e){
+                   var dto = {};
+                   dto.Name = $("#Name").val();
+                   dto.Short_name = $("#Short_name").val();  // corrected
+                   dto.Code = $("#Code").val();
+                   dto.createdAt = $("#createdAt").val();
+
+                    var id=$("#Id").val();
+
+            if(id>0){
+                //update
+                dto.id=Number(id);
+                var jsonString=JSON.stringify(dto);
+                $.ajax({
+                    type: "PUT",
+                    url: "/api/Departments/"+id,
+                    data: jsonString,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(response){
+                        pageRefresh();
+                        toastr.success("Data successfully updated");
+                    },
+                    failure: function(response){
+                        toastr.error(response, "ERROR");
+                    }
+                });
+
+            }else{
+                //save
+                var jsonString=JSON.stringify(dto);
+                $.ajax({
+                    type: "POST",
+                    url: "/api/Departments",
+                    data: jsonString,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(response){
+                        pageRefresh();
+                        toastr.success("Data successfully saved");
+                    },
+                    failure: function(response){
+                        toastr.error(response, "ERROR");
+                    }
+                });
+
+            }
+        });
+
+        function getData(id){
+            $.get("/api/Departments/"+id, function(result){
+                $("#Id").val(result.id);
+                $("#Name").val(result.name);
+                $("#Short_name").val(result.short_name);
+                $("#Code").val(result.code);
+                $("#createdAt").val(result.createdAt);
+            });
+        }
+
+
+        function pageRefresh(){
+            $("#Id").val("");
+            $("#Name").val("");
+            $("#Short_name").val("");
+            $("#Code").val("");
+            $("#createdAt").val("");
+        }
+    </script>
+}

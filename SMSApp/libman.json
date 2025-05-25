@@ -3,29 +3,28 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "provider": "cdnjs",
       "library": "jqueryui@1.14.1",
       "destination": "wwwroot/lib/jqueryui/"
     },
     {
-      "provider": "cdnjs",
       "library": "font-awesome@6.7.2",
       "destination": "wwwroot/lib/font-awesome/"
     },
     {
-      "provider": "cdnjs",
       "library": "toastr.js@2.1.4",
       "destination": "wwwroot/lib/toastr.js/"
     },
     {
-      "provider": "cdnjs",
       "library": "bootbox.js@6.0.3",
       "destination": "wwwroot/lib/bootbox.js/"
     },
     {
-      "provider": "cdnjs",
       "library": "datatable@2.0.2",
       "destination": "wwwroot/lib/datatable/"
+    },
+    {
+      "library": "datatables@1.10.21",
+      "destination": "wwwroot/lib/datatables/"
     }
   ]
 }
