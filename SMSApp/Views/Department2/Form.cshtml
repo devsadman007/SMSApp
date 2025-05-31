@@ -1,54 +1,179 @@
-﻿@model SMSApp.Models.Department
+﻿@model SMSApp.CommandQueries.DepartmentCommand
 @{
     ViewData["Title"] = "Form";
 }
 
-<h1>Form</h1>
-<form>
-    <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Short_name" class="control-label"></label>
-                <input asp-for="Short_name" class="form-control" />
-                <span asp-validation-for="Short_name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="createdAt" class="control-label"></label>
-                <input asp-for="createdAt" class="form-control" />
-                <span asp-validation-for="createdAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="button" id="btnSubmit" value="Submit" class="btn btn-primary" />
-                @* <a class="btn btn-danger" asp-action="Index">Back to List</a> *@
-                <a class="btn btn-danger" href="/Department2/List">Back to List</a>
-                
-                <input asp-for="Id" type="hidden" />
-            </div>
+<h3 class="text-center">Student Management System (SMS)</h3>
+
+<div class="d-flex justify-content-center ">
+    <div class="card shadow p-3">
+        <div class="card-header">
+            Registration Here
         </div>
-        <div class="col-md-3"></div>
+        <div class="card-body">
+
+            <form>
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Short_name" class="control-label"></label>
+                            <input asp-for="Short_name" class="form-control" />
+                            <span asp-validation-for="Short_name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Code" class="control-label"></label>
+                            <input asp-for="Code" class="form-control" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+                        @* <div class="form-group">
+                            <label asp-for="createdAt" class="control-label"></label>
+                            <input asp-for="createdAt" class="form-control" />
+                            <span asp-validation-for="createdAt" class="text-danger"></span>
+                        </div> *@
+                        <div class="form-group d-flex justify-content-center mt-3">
+                            <a class="btn btn-danger" href="/Department2/List">Back to List</a>
+                            <input type="button" id="btnSubmit" value="Submit" class="btn btn-primary " />
+                           
+                            @* <a class="btn btn-danger" asp-action="Index">Back to List</a> *@
+                           
+                            <a class="btn btn-success" id="btnrefresh">Refresh</a>
+
+                            <input asp-for="Id" type="hidden" />
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
     </div>
-</form>
+
+</div>
+
+<div class="jumbotron jumbotron-fluid shadow-lg p-3 mt-3">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="listTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Short Name</th>
+                        <th>Code</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Department Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-end" width="30%"></th>
+                                        <th class="text-center" width="5%"></th>
+                                        <th width="65%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Name</th>
+                                        <td>:</td>
+                                        <td><label id="lblName"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Short Name</th>
+                                        <td>:</td>
+                                        <td><label id="lblSName"></label></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Code</th>
+                                        <td>:</td>
+                                        <td><label id="lblCode"></label></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                @* <button type="button" class="btn btn-primary">Save changes</button> *@
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
+}
 
 @section Scripts {
+    <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function()
+        {
             var urlVar=getUrlVars();
             var id=urlVar["id"];
             if(id>0){
                 getData(id);
             }
+            loadTable();
+            
         });
+
+        function loadTable(){
+            $('#listTable').DataTable().destroy();
+            
+            $('#listTable').DataTable({
+                ordering:false,
+                ajax : {
+                    url: '/api/Departments/GetHistory',
+                    dataSrc: ""
+                },
+                columns: [
+                    {data: 'name'},
+                    {data: 'short_name'},
+                    {data: 'code'},
+                    {
+                        data: 'id',
+                        render: function(data){
+                            return "<div class='btn-group'> "+
+                                "<a onclick='openModal()' class='btn btn-success js-details' data-id="+data+"><i class='fa-solid fa-eye'></i></a>"+
+                                "<a class='btn btn-info js-edit' data-id="+data+"><i class='fa-solid fa-pen-to-square'></i></a>"+
+                                "<a class='btn btn-danger js-delete' data-id="+data+"><i class='fa-solid fa-trash-can'></i></a>"+
+                                "</div>";
+                        }
+                    }
+                ]
+            });
+        }
 
 
         $(document.body).on("click", "#btnSubmit", function(e){
@@ -73,6 +198,7 @@
                     success: function(response){
                         pageRefresh();
                         toastr.success("Data successfully updated");
+                        loadTable();
                     },
                     failure: function(response){
                         toastr.error(response, "ERROR");
@@ -91,6 +217,7 @@
                     success: function(response){
                         pageRefresh();
                         toastr.success("Data successfully saved");
+                        loadTable();
                     },
                     failure: function(response){
                         toastr.error(response, "ERROR");
@@ -106,9 +233,39 @@
                 $("#Name").val(result.name);
                 $("#Short_name").val(result.short_name);
                 $("#Code").val(result.code);
-                $("#createdAt").val(result.createdAt);
+                // $("#createdAt").val(result.createdAt);
             });
         }
+        $(document.body).on("click",".js-edit", function(e){
+                var button = $(this);
+                var id = button.attr("data-id");
+                getData(id);
+        });
+          $(document.body).on("click", ".js-delete", function(e){
+                var button = $(this);
+                var id = button.attr("data-id");
+                bootbox.confirm("Are you sure to delete the data?", function(result){
+                    if(result){
+                        $.ajax({
+                            url: "/api/Departments/" + id,
+                            method: "DELETE",
+                            success: function(){
+                                toastr.success("Data delete successful");
+
+
+                                // Remove row from DataTable
+                                var table = $("#listTable").DataTable();
+                                table.row(button.parents("tr")).remove().draw(false);
+                                loadTable();
+                            },
+                            error: function(request){
+                                var response = jQuery.parseJSON(request.responseText);
+                                toastr.error(response.message || "An error occurred", "Error");
+                            }
+                        });
+                    }
+                });
+            });
 
 
         function pageRefresh(){
@@ -116,7 +273,36 @@
             $("#Name").val("");
             $("#Short_name").val("");
             $("#Code").val("");
-            $("#createdAt").val("");
+            // $("#createdAt").val("");
+        }
+
+        $(document.body).on("click",".js-details", function(e){
+                var button = $(this);
+                var id = button.attr("data-id");              
+                $.get("/api/Departments/"+id, function(result){
+                // $("#Id").val(result.id);
+                $("#lblName").text(result.name);
+                $("#lblSName").text(result.short_name);
+                $("#lblCode").text(result.code);
+               
+                // $("#createdAt").val(result.createdAt);
+            });
+                
+        });
+        $(document).ready(function() {
+          $('#btnrefresh').click(function() {
+            //code here for refresh button
+             $("#Id").val("");
+            $("#Name").val("");
+            $("#Short_name").val("");
+            $("#Code").val("");
+            // $("#createdAt").val("");
+          });
+        });
+
+         function openModal() {
+             var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+              myModal.show();
         }
     </script>
 }

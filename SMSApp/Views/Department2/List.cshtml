@@ -45,6 +45,7 @@
                         data: 'id',
                         render: function(data){
                             return "<div class='btn-group'> "+
+                                "<a href='/Department2/Form?id="+data+"' class='btn btn-success js-details' data-id="+data+"><i class='fa-solid fa-eye'></i></a>"+
                                 "<a href='/Department2/Form?id="+data+"' class='btn btn-info js-edit' data-id="+data+"><i class='fa-solid fa-pen-to-square'></i></a>"+
                                 "<a class='btn btn-danger js-delete' data-id="+data+"><i class='fa-solid fa-trash-can'></i></a>"+
                                 "</div>";
